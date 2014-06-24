@@ -10,7 +10,7 @@
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .fooddrop { padding: 15px }
-        .fooddrop li { padding: 15px }
+        .fooddrop li { cursor: move }
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -28,8 +28,29 @@
         </h1>
     </div>
     <div class="col-md-6 col-md-offset-1">
-        %if results:
-        %weights, voters = results
+        %if not started:
+        <div class="page-header">
+            <h3>Waiting for Survey to Start...</h3>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Available choices</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="list-group" id="foodout">
+                    %for name, menu, loc  in foods:
+                    <li class="list-group-item">
+                        <strong>{{name}}</strong>
+                        (<a href="{{menu}}">Menu</a>)
+                        <address>{{loc}}</address>
+                        <input type="hidden" name="food" value="{{name}}"/>
+                    </li>
+                    %end
+                </ul>
+            </div>
+        </div>
+        %elif results:
+        %weights, voters, users_old = results
         <div class="page-header">
             <h3>Results</h3>
         </div>
@@ -72,10 +93,12 @@
                         </div>
                         <div class="panel-body">
                             <ul class="list-group fooddrop" id="foodout">
-                                %for item in foods:
+                                %for name, menu, loc  in foods:
                                 <li class="list-group-item">
-                                    <strong>{{item.name}}</strong>
-                                    <input type="hidden" name="food" value="{{item.name}}"/>
+                                    <strong>{{name}}</strong>
+                                    (<a href="{{menu}}">Menu</a>)
+                                    <address>{{loc}}</address>
+                                    <input type="hidden" name="food" value="{{name}}"/>
                                 </li>
                                 %end
                             </ul>
@@ -96,8 +119,8 @@
                 <input type="text" name="name" placeholder="Restaurant" required=""/>
             </div>
             <div class="form-group">
-                <input type="text" name="loc" placeholder="Address"/>
                 <input type="url" name="menu" placeholder="Menu URL"/>
+                <input type="text" name="loc" placeholder="Address"/>
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Add</button>
@@ -123,17 +146,18 @@
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="static/js/bootstrap.min.js"></script>
 <script>
-    $(function() {
-    $( ".fooddrop" ).sortable({
-        connectWith: ".fooddrop",
-        stop : function(event, ui) { return $("#foodin li").length <= {{max_votes}}; }
+    $(document).ready(function () {
+        //Convert address tags to google map links - Michael Jasper 2012
+        $('address').each(function () {
+          var link = "<a href='http://maps.google.com/maps?q=" + encodeURIComponent( $(this).text() ) + "' target='_blank'>" + $(this).text() + "</a>";
+          $(this).html(link);
+        });
+        $( ".fooddrop" ).sortable({
+            connectWith: ".fooddrop",
+            stop : function(event, ui) { return $("#foodin li").length <= {{max_votes}}; }
+        });
+        $( ".fooddrop" ).disableSelection();
     });
-    $( ".fooddrop" ).disableSelection();
-    });
-
-
-
-
 </script>
 </body>
 </html>

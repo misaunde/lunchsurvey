@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -21,19 +20,19 @@
   <body>
 
     <div class="container">
-
-      <form class="form-signin" action="who" method="post">
-            <div class="form-group">
-                <label for="user">Who are you?</label>
-                <select class="form-control" id="user" name="user">
-                    %for name in users:
-                        <option>{{name}}</option>
-                    %end
-                </select>
-            </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Embark</button>
-      </form>
-
+        <div class="col-md-4 col-md-offset-4">
+            <form action="who" method="post">
+                <div class="form-group">
+                    <label for="user">Who are you?</label>
+                    <select class="form-control" id="user" name="user">
+                        %for name in users:
+                            <option>{{name}}</option>
+                        %end
+                    </select>
+                </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Embark</button>
+            </form>
+        </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
