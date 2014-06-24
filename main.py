@@ -3,7 +3,7 @@
 import itertools
 from bottle import route, run, view, static_file, redirect, request, response
 import model
-
+import datetime
 
 max_votes = model.max_votes
 db = model.Database('db.db')
@@ -57,8 +57,15 @@ def stop():
 @view('base')
 @auth
 def index(user):
-    return dict(has_voted=user in db.votes, users=db.get_users(), foods=db.get_foodplaces(), max_votes=max_votes, results=db.results, started=started)
+    dates = db.get_dates()
+    print(dates)
+    return dict(has_voted=user in db.votes, users=db.get_users(), foods=db.get_foodplaces(), max_votes=max_votes, results=db.results, started=started, dates=dates)
 
+@route('/history')
+@view('history')
+def history():
+    date = datetime.datetime.strptime(request.query['date'], '%Y-%m-%d').date()
+    return dict(sel_date=date, dates=db.get_dates(), results=db.get_results(date))
 
 @route('/who', method='get')
 @view('who')
@@ -86,12 +93,11 @@ def static(path):
 @route('/survey', method='post')
 @auth
 def submit(user):
-    foods = set(list(itertools.takewhile(lambda x: x != '__sentinel__', request.forms.getall('food')))[:max_votes])
+    foods = list(itertools.takewhile(lambda x: x != '__sentinel__', request.forms.getall('food')))[:max_votes]
     print(foods, user)
     db.votes[user] = foods
-    if len(db.votes) == len(db.get_users()):
-        db.calc_results()
     redirect('/')
 
 
-run(host='0.0.0.0', port=8080)
+# run(host='0.0.0.0', port=8080)
+run(host='localhost', port=8080, reloader=True, debug=True)

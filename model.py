@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import json
 import sqlite3
+import datetime
 max_votes = 5
 
 
@@ -11,11 +12,11 @@ class FoodPlace:
 
 class Database:
     def __init__(self, file):
-        self._conn = sqlite3.connect(file, isolation_level = None)
+        self._conn = sqlite3.connect(file, detect_types=sqlite3.PARSE_DECLTYPES, isolation_level = None)
         c = self._conn.cursor()
         c.execute('CREATE TABLE IF NOT EXISTS user (name text, weight real)')
         c.execute('CREATE TABLE IF NOT EXISTS foodplace (name text, menu text, loc text)')
-        c.execute('CREATE TABLE IF NOT EXISTS result (weights text, voters text, users text)')
+        c.execute('CREATE TABLE IF NOT EXISTS result (weights text, voters text, users text, dt date)')
         self.votes = {}
         self.results = None
 
@@ -41,16 +42,20 @@ class Database:
         
     def get_foodplaces(self):
         c = self._conn.cursor()
-        return [row for row in c.execute('SELECT * FROM foodplace')]
+        return [row for row in c.execute('SELECT * FROM foodplace ORDER BY name')]
         
-    def get_recent_results(self):
+    def get_results(self, date):
         c = self._conn.cursor()
-        w,v,u = c.execute('SELECT  FROM result ORDER BY recid DESC LIMIT 1').fetchone()
+        w,v,u,dt = c.execute('SELECT * FROM result WHERE dt = ?', (date,)).fetchone()
         return json.loads(w), json.loads(v), json.loads(u)
     
-    def _save_results(self, weights, voters, users):
+    def get_dates(self):
         c = self._conn.cursor()
-        c.execute('INSERT INTO result(weights, voters, users) values(?,?,?)', (json.dumps(weights),json.dumps(voters),json.dumps(users)))
+        return [d for (d,) in c.execute('SELECT dt FROM result')]
+    
+    def _save_results(self, weights, voters, users, date=datetime.date.today()):
+        c = self._conn.cursor()
+        c.execute('INSERT INTO result(dt, weights, voters, users) values(?,?,?,?)', (date, json.dumps(weights),json.dumps(voters),json.dumps(users)))
         
     def calc_results(self):
         foods = self.get_foodplaces()

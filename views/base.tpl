@@ -10,7 +10,8 @@
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .fooddrop { padding: 15px }
-        .fooddrop li { cursor: move }
+        .fooddrop li { cursor: move; }
+        .list-group li { padding: 2px }
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -27,7 +28,7 @@
             <small>Team Awesome</small>
         </h1>
     </div>
-    <div class="col-md-6 col-md-offset-1">
+    <div class="col-md-8">
         %if not started:
         <div class="page-header">
             <h3>Waiting for Survey to Start...</h3>
@@ -37,13 +38,14 @@
                 <h3 class="panel-title">Available choices</h3>
             </div>
             <div class="panel-body">
-                <ul class="list-group" id="foodout">
+                <ul class="list-group list-inline" id="foodout">
                     %for name, menu, loc  in foods:
-                    <li class="list-group-item">
-                        <strong>{{name}}</strong>
-                        (<a href="{{menu}}">Menu</a>)
-                        <address>{{loc}}</address>
-                        <input type="hidden" name="food" value="{{name}}"/>
+                    <li>
+                        <div class="foodplace">
+                            <strong>{{name}}</strong>
+                            <a href="{{menu}}"><span class="glyphicon glyphicon-cutlery"></span></a>
+                            <address>{{loc}}</address>
+                        </div>
                     </li>
                     %end
                 </ul>
@@ -93,10 +95,10 @@
                         </div>
                         <div class="panel-body">
                             <ul class="list-group fooddrop" id="foodout">
-                                %for name, menu, loc  in foods:
+                                %for name, menu, loc in foods:
                                 <li class="list-group-item">
                                     <strong>{{name}}</strong>
-                                    (<a href="{{menu}}">Menu</a>)
+                                    <a href="{{menu}}"><span class="glyphicon glyphicon-cutlery"></span></a>
                                     <address>{{loc}}</address>
                                     <input type="hidden" name="food" value="{{name}}"/>
                                 </li>
@@ -111,6 +113,7 @@
             </div>
         </form>
         %end
+        %if not started:
         <div class="page-header">
             <h3>Add Restaurant</h3>
         </div>
@@ -126,9 +129,10 @@
                 <button type="submit" class="btn btn-primary">Add</button>
             </div>
         </form>
+        %end
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-md-offset-1">
         <div class="page-header">
             <h3>Current Weights</h3>
         </div>
@@ -137,6 +141,21 @@
             <li class="list-group-item"><strong>{{name}}:</strong> {{weight}}</li>
             %end
         </ul>
+        <div class="page-header">
+            <h3>Past Results</h3>
+        </div>
+        <form action="history" method="get">
+            <div class="form-group">
+                <select class="form-control" name="date">
+                    %for date in dates:
+                        <option>{{date}}</option>
+                    %end
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-default">Show</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -149,8 +168,8 @@
     $(document).ready(function () {
         //Convert address tags to google map links - Michael Jasper 2012
         $('address').each(function () {
-          var link = "<a href='http://maps.google.com/maps?q=" + encodeURIComponent( $(this).text() ) + "' target='_blank'>" + $(this).text() + "</a>";
-          $(this).html(link);
+          var link = "<a href='http://maps.google.com/maps?q=" + encodeURIComponent( $(this).text() ) + "' target='_blank'><span class='glyphicon glyphicon-road'></span></a>";
+          $(this).replaceWith(link);
         });
         $( ".fooddrop" ).sortable({
             connectWith: ".fooddrop",
