@@ -36,9 +36,9 @@
 
         <ul class="list-group" id="foodout">
             %for food, weight in weights:
+                %votes = ['{} ({:d})'.format(voter, rank+1) for voter,rank in voters[food]]
             <li class="list-group-item">
-                <strong>{{food}}</strong> ({{weight}}): {{', '.join(['{} ({:d})'.format(voter, rank+1) for voter,rank in
-                voters[food]])}}
+                <strong>{{food}}</strong> ({{weight}}): {{', '.join(votes)}}
             </li>
             %end
         </ul>
@@ -94,26 +94,27 @@
         <form action="food" method="post">
             <div class="form-group">
                 <input type="text" name="name" placeholder="Restaurant" required=""/>
-                <input type="url" name="menu" placeholder="Menu URL"/>
-                <input type="text" name="loc" placeholder="Address"/>
             </div>
-            <button type="submit" class="btn btn-primary">Add</button>
+            <div class="form-group">
+                <input type="text" name="loc" placeholder="Address"/>
+                <input type="url" name="menu" placeholder="Menu URL"/>
+            </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Add</button>
             </div>
         </form>
     </div>
 
-</div>
-<div class="col-md-3">
-    <div class="page-header">
-        <h3>Current Weights</h3>
+    <div class="col-md-3">
+        <div class="page-header">
+            <h3>Current Weights</h3>
+        </div>
+        <ul class="list-group">
+            %for name, weight in users.items():
+            <li class="list-group-item"><strong>{{name}}:</strong> {{weight}}</li>
+            %end
+        </ul>
     </div>
-    <ul class="list-group">
-        %for name, weight in users.items():
-        <li class="list-group-item"><strong>{{name}}:</strong> {{weight}}</li>
-        %end
-    </ul>
 </div>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -129,6 +130,9 @@
     });
     $( ".fooddrop" ).disableSelection();
     });
+
+
+
 
 </script>
 </body>
