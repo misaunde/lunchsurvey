@@ -7,30 +7,25 @@
         <div class="page-header">
             <h3>Add Restaurant</h3>
         </div>
-        <form action="food" method="post">
-            <div class="form-group">
-                <input type="text" name="name" placeholder="Restaurant" required=""/>
+        <div class="row">
+            <div class="col-md-6">
+                <form action="food" method="post">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Restaurant" required=""/>
+                    </div>
+                    <div class="form-group">
+                        <input type="url" name="menu" placeholder="Menu URL"/>
+                        <input type="text" name="loc" placeholder="Address"/>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <input type="url" name="menu" placeholder="Menu URL"/>
-                <input type="text" name="loc" placeholder="Address"/>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Add</button>
-            </div>
-        </form>
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Available choices</h3>
-            </div>
-            <div class="panel-body">
-                <ul class="list-unstyled list-inline">
-                    %for name, menu, loc in foods:
-                    <li>
-                        %include('foodplace.tpl', name=name, menu=menu, loc=loc)
-                    </li>
-                    %end
-                </ul>
+            <div class="col-md-6">
+                <%
+                include('foodlist.tpl', title='Available choices', droppable=False)
+                %>
             </div>
         </div>
         %elif results:
@@ -56,39 +51,23 @@
             <h3>Survey</h3>
         </div>
         <form action="survey" method="post">
-            <div class="form-group row">
+            <div class="row">
                 <div class="col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Rank by preference (max {{max_votes}})</h3>
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-unstyled fooddrop" id="foodin">
-                            </ul>
-                        </div>
+                    <%
+                    foodlist_title = 'Rank by preference (max {:d})'.format(max_votes)
+                    include('foodlist.tpl', foods=[], title=foodlist_title, droppable=True, listid='foodin')
+                    %>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
                 <input type="hidden" name="food" value="__sentinel__"/>
 
                 <div class="col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Available choices</h3>
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-unstyled fooddrop" id="foodout">
-                                %for name, menu, loc in foods:
-                                <li>
-                                    %include('foodplace.tpl', name=name, menu=menu, loc=loc)
-                                </li>
-                                %end
-                            </ul>
-                        </div>
-                    </div>
+                    <%
+                    include('foodlist.tpl', title='Available choices', droppable=True)
+                    %>
                 </div>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
         %end
@@ -122,15 +101,14 @@
 </div>
 <%
 style = '''
-        .fooddrop { padding: 15px }
-        .fooddrop li { cursor: move; }
-        .list-group li { padding: 2px }
+        .fooddrop .foodplace { cursor: move; }
+        .foodlist { max-height: 400px; min-height: 80px; overflow-y: auto;}
 '''
 script = '''
     $(document).ready(function () {
         $( ".fooddrop" ).sortable({
             connectWith: ".fooddrop",
-            stop : function(event, ui) { return $("#foodin li").length <= ''' + str(max_votes) + '''; }
+            stop : function(event, ui) { return $("#foodin .foodplace").length <= ''' + str(max_votes) + '''; }
         });
         $( ".fooddrop" ).disableSelection();
     });
