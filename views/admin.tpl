@@ -1,4 +1,7 @@
-<div class="col-md-4">
+<div class="col-md-4 col-md-offset-2">
+    <div class="page-header">
+        <h3>Users</h3>
+    </div>
     <form action="user" method="post">
         <div class="form-group">
             <input type="text" name="name" placeholder="Name" required=""/>
@@ -8,20 +11,31 @@
     </form>
 </div>
 <div class="col-md-4">
+    <div class="page-header">
+        <h3>Controls</h3>
+    </div>
     <form action="reset" method="post">
-        <button class="btn btn-lg btn-danger btn-block" type="submit">Reset Votes</button>
+        <div class="form-group">
+            <button class="btn btn-lg btn-danger btn-block" type="submit">Reset Votes</button>
+        </div>
     </form>
     %if started:
-        <form action="stop" method="post">
+    <form action="stop" method="post">
+        <div class="form-group">
             <button class="btn btn-lg btn-warning btn-block" type="submit">Stop Survey</button>
-        </form>
+        </div>
+    </form>
     %else:
-        <form action="start" method="post">
+    <form action="start" method="post">
+        <div class="form-group">
             <button class="btn btn-lg btn-success btn-block" type="submit">Start Survey</button>
-        </form>
+        </div>
+    </form>
     %end
-        <form action="results" method="post">
+    <form action="results" method="post">
+        <div class="form-group">
             <button class="btn btn-lg btn-primary btn-block" type="submit">Tabulate Results</button>
-        </form>
+        </div>
+    </form>
 </div>
 %rebase('base.tpl', subtitle='Administration')
