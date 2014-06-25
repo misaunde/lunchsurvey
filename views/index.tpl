@@ -18,7 +18,7 @@
                         <input type="text" name="loc" placeholder="Address"/>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="submit" class="btn btn-lg btn-primary btn-block">Add</button>
                     </div>
                 </form>
             </div>
@@ -58,7 +58,7 @@
                     include('foodlist.tpl', foods=[], title=foodlist_title, droppable=True, listid='foodin')
                     %>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class=" class="btn btn-lg btn-primary btn-block">Submit</button>
                     </div>
                 </div>
                 <input type="hidden" name="food" value="__sentinel__"/>
