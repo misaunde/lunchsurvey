@@ -1,17 +1,21 @@
+<%
+setdefault('title', 'Lunch Survey')
+setdefault('subtitle', 'Team Awesome')
+setdefault('style','')
+setdefault('script','')
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lunch Survey</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{title}}</title>
 
     <!-- Bootstrap -->
-    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/bootstrap.min.css" rel="stylesheet" />
     <style>
-        .fooddrop { padding: 15px }
-        .fooddrop li { cursor: move; }
-        .list-group li { padding: 2px }
+    {{!style}}
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -22,161 +26,26 @@
     <![endif]-->
 </head>
 <body>
-<div class="container">
-    <div class="col-md-6 col-md-offset-3">
-        <h1>Lunch Survey
-            <small>Team Awesome</small>
-        </h1>
-    </div>
-    <div class="col-md-8">
-        %if not started:
-        <div class="page-header">
-            <h3>Waiting for Survey to Start...</h3>
-        </div>
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Available choices</h3>
-            </div>
-            <div class="panel-body">
-                <ul class="list-group list-inline" id="foodout">
-                    %for name, menu, loc  in foods:
-                    <li>
-                        <div class="foodplace">
-                            <strong>{{name}}</strong>
-                            <a href="{{menu}}"><span class="glyphicon glyphicon-cutlery"></span></a>
-                            <address>{{loc}}</address>
-                        </div>
-                    </li>
-                    %end
-                </ul>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h1>{{title}}
+                    <small>{{subtitle}}</small>
+                </h1>
             </div>
         </div>
-        %elif results:
-        %weights, voters, users_old = results
-        <div class="page-header">
-            <h3>Results</h3>
+        <div class="row">
+            {{!base}}
         </div>
-
-        <ul class="list-group" id="foodout">
-            %for food, weight in weights:
-                %votes = ['{} ({:d})'.format(voter, rank+1) for voter,rank in voters[food]]
-            <li class="list-group-item">
-                <strong>{{food}}</strong> ({{weight}}): {{', '.join(votes)}}
-            </li>
-            %end
-        </ul>
-        %elif has_voted:
-        <div class="page-header">
-            <h3>Waiting for Results...</h3>
-        </div>
-        %else:
-        <div class="page-header">
-            <h3>Survey</h3>
-        </div>
-        <form action="survey" method="post">
-            <div class="form-group row">
-                <div class="col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Rank by preference (max {{max_votes}})</h3>
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-group fooddrop" id="foodin">
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <input type="hidden" name="food" value="__sentinel__"/>
-
-                <div class="col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Available choices</h3>
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-group fooddrop" id="foodout">
-                                %for name, menu, loc in foods:
-                                <li class="list-group-item">
-                                    <strong>{{name}}</strong>
-                                    <a href="{{menu}}"><span class="glyphicon glyphicon-cutlery"></span></a>
-                                    <address>{{loc}}</address>
-                                    <input type="hidden" name="food" value="{{name}}"/>
-                                </li>
-                                %end
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </form>
-        %end
-        %if not started:
-        <div class="page-header">
-            <h3>Add Restaurant</h3>
-        </div>
-        <form action="food" method="post">
-            <div class="form-group">
-                <input type="text" name="name" placeholder="Restaurant" required=""/>
-            </div>
-            <div class="form-group">
-                <input type="url" name="menu" placeholder="Menu URL"/>
-                <input type="text" name="loc" placeholder="Address"/>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Add</button>
-            </div>
-        </form>
-        %end
     </div>
 
-    <div class="col-md-3 col-md-offset-1">
-        <div class="page-header">
-            <h3>Current Weights</h3>
-        </div>
-        <ul class="list-group">
-            %for name, weight in users.items():
-            <li class="list-group-item"><strong>{{name}}:</strong> {{weight}}</li>
-            %end
-        </ul>
-        <div class="page-header">
-            <h3>Past Results</h3>
-        </div>
-        <form action="history" method="get">
-            <div class="form-group">
-                <select class="form-control" name="date">
-                    %for date in dates:
-                        <option>{{date}}</option>
-                    %end
-                </select>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-default">Show</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="static/js/bootstrap.min.js"></script>
-<script>
-    $(document).ready(function () {
-        //Convert address tags to google map links - Michael Jasper 2012
-        $('address').each(function () {
-          var link = "<a href='http://maps.google.com/maps?q=" + encodeURIComponent( $(this).text() ) + "' target='_blank'><span class='glyphicon glyphicon-road'></span></a>";
-          $(this).replaceWith(link);
-        });
-        $( ".fooddrop" ).sortable({
-            connectWith: ".fooddrop",
-            stop : function(event, ui) { return $("#foodin li").length <= {{max_votes}}; }
-        });
-        $( ".fooddrop" ).disableSelection();
-    });
-</script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="static/js/bootstrap.min.js"></script>
+    <script>
+        {{!script}}
+    </script>
 </body>
 </html>

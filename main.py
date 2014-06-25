@@ -54,11 +54,10 @@ def stop():
     redirect('/admin')
 
 @route('/')
-@view('base')
+@view('index')
 @auth
 def index(user):
     dates = db.get_dates()
-    print(dates)
     return dict(has_voted=user in db.votes, users=db.get_users(), foods=db.get_foodplaces(), max_votes=max_votes, results=db.results, started=started, dates=dates)
 
 @route('/history')
