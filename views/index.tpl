@@ -78,7 +78,7 @@
             <h3>Current Weights</h3>
         </div>
         <ul class="list-group">
-            %for name, weight in users.items():
+            %for name, weight in users:
             <li class="list-group-item"><strong>{{name}}:</strong> {{weight}}</li>
             %end
         </ul>

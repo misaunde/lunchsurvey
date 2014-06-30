@@ -34,7 +34,7 @@ class Database:
         
     def get_users(self):
         c = self._conn.cursor()
-        return {name : weight for name, weight in c.execute('SELECT * FROM user ORDER BY weight DESC')}
+        return [(name, weight) for name, weight in c.execute('SELECT * FROM user ORDER BY weight DESC')]
     
     def update_users(self, weights):
         c = self._conn.cursor()
@@ -59,7 +59,7 @@ class Database:
         
     def calc_results(self):
         foods = self.get_foodplaces()
-        users = self.get_users()
+        users = {name:weight for name, weight in self.get_users()}
         voters, weights = {food[0]: [] for food in foods}, {food[0]: 0. for food in foods}
         #calc weights for foods
         for user, user_foods in self.votes.items():
