@@ -4,9 +4,10 @@ import itertools
 from bottle import route, run, view, static_file, redirect, request, response
 import model
 import datetime
+import sys
 
 max_votes = model.max_votes
-db = model.Database('db.db')
+db = model.Database(sys.argv[1] if len(sys.argv) > 1 else 'db.db')
 started = False
 
 
@@ -98,5 +99,5 @@ def submit(user):
     redirect('/')
 
 
-# run(host='0.0.0.0', port=8080)
-run(host='localhost', port=8080, reloader=True, debug=True)
+run(host='0.0.0.0', port=8080)
+# run(host='localhost', port=8080, reloader=True, debug=True)
