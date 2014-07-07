@@ -11,6 +11,7 @@ setdefault('droppable', False)
             %for name, menu, loc in foods:
             <li class="foodplace">
                 %include('foodplace.tpl', name=name, menu=menu, loc=loc)
+                <input type="hidden" name="food" value="{{name}}"/>
             </li>
             %end
         </ul>
