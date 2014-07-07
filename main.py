@@ -98,4 +98,4 @@ def submit(user):
     db.votes[user] = foods
     redirect('/')
 
-run(host='localhost', port=8080, reloader=True, debug=True)
+run(host='0.0.0.0', port=8080)
