@@ -3,7 +3,7 @@
         <div class="form-group">
             <label for="user">Who are you?</label>
             <select class="form-control" id="user" name="user">
-                %for name in users:
+                %for name, weight in users:
                     <option>{{name}}</option>
                 %end
             </select>
