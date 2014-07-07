@@ -34,7 +34,7 @@ class Database:
         
     def get_users(self):
         c = self._conn.cursor()
-        return [(name, weight) for name, weight in c.execute('SELECT * FROM user ORDER BY weight DESC')]
+        return list(c.execute('SELECT * FROM user ORDER BY weight DESC, name ASC'))
     
     def update_users(self, weights):
         c = self._conn.cursor()
@@ -47,7 +47,11 @@ class Database:
     def get_results(self, date):
         c = self._conn.cursor()
         w,v,u,dt = c.execute('SELECT * FROM result WHERE dt = ?', (date,)).fetchone()
-        return json.loads(w), json.loads(v), json.loads(u)
+        users = json.loads(u)
+        if type(users) == dict:
+            users = list(users.items())
+            c.execute('UPDATE result SET users = ? WHERE dt = ?', (json.dumps(users), date))
+        return json.loads(w), json.loads(v), users
     
     def get_dates(self):
         c = self._conn.cursor()
