@@ -48,24 +48,23 @@
         <div class="page-header">
             <h3>Survey</h3>
         </div>
-        <form action="survey" method="post">
             <div class="row">
                 <div class="col-md-6">
-                    <%
-                    foodlist_title = 'Rank by preference (max {:d})'.format(max_votes)
-                    include('foodlist.tpl', foods=[], title=foodlist_title, droppable=True, listid='foodin')
-                    %>
-                    <div class="form-group">
-                        <button type="submit" class=" class="btn btn-lg btn-primary btn-block">Submit</button>
-                    </div>
+                    <form action="survey" method="post" id="survey-form">
+                        <%
+                        foodlist_title = 'Rank by preference (max {:d})'.format(max_votes)
+                        include('foodlist.tpl', foods=[], title=foodlist_title, droppable=True, listid='foodin')
+                        %>
+                        <div class="form-group">
+                            <button form="survey-form" type="submit" class=" class="btn btn-lg btn-primary btn-block">Submit</button>
+                        </div>
+                    </form>
                 </div>
-                <input type="hidden" name="food" value="__sentinel__"/>
 
                 <div class="col-md-6">
                     %include('foodlist.tpl', title='Available choices', droppable=True)
                 </div>
             </div>
-        </form>
         %end
     </div>
 
