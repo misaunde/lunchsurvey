@@ -93,7 +93,7 @@ def static(path):
 @route('/survey', method='post')
 @auth
 def submit(user):
-    foods = list(itertools.takewhile(lambda x: x != '__sentinel__', request.forms.getall('food')))[:max_votes]
+    foods = list(request.forms.getall('food'))[:max_votes]
     print(foods, user)
     db.votes[user] = foods
     redirect('/')
