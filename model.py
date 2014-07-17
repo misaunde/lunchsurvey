@@ -76,7 +76,7 @@ class Database:
         weights.sort(key=lambda x: (x[1], x[0]), reverse=True)
 
         #adjust weights
-        weight_factors = {user: 1.0 for user in users}
+        weight_factors = {user: 1.0 for user in users if user in self.votes}
         if weights:
             winners = voters[weights[0][0]]
             for winner, rank in winners:
