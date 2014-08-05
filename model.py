@@ -81,7 +81,7 @@ class Database:
             winners = voters[weights[0][0]]
             for winner, rank in winners:
                 weight_factors[winner] = 1.0 - (max_votes - rank) / max_votes
-        self.update_users({user: (users[user] + weight_factor) / 2 for user, weight_factor in weight_factors.items()})
+        self.update_users({user: round((users[user] + weight_factor) / 2,2) for user, weight_factor in weight_factors.items()})
 
         #save results
         self.results = (weights, voters, users)
