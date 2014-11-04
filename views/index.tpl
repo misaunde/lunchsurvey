@@ -28,7 +28,9 @@
         </div>
         %elif results:
         %weights, voters, users_old = results
+        %winner_name, winner_menu, winner_loc = winner
         <div class="page-header">
+            <h1>Winner: <a href="{{winner_menu if winner_menu else '#'}}">{{winner_name}}</a>!!!!!</h1>
             <h3>Results</h3>
         </div>
 
