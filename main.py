@@ -59,7 +59,7 @@ def stop():
 @auth
 def index(user):
     dates = db.get_dates()
-    return dict(has_voted=user in db.votes, users=db.get_users(), foods=db.get_foodplaces(), max_votes=max_votes, results=db.results, started=started, dates=dates)
+    return dict(has_voted=user in db.votes, users=db.get_users(), foods=db.get_foodplaces(), max_votes=max_votes, results=db.results, winner=db.get_winner(), started=started, dates=dates)
 
 @route('/history')
 @view('history')

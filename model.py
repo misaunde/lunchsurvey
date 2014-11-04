@@ -60,6 +60,15 @@ class Database:
     def _save_results(self, weights, voters, users, date=datetime.date.today()):
         c = self._conn.cursor()
         c.execute('INSERT INTO result(dt, weights, voters, users) values(?,?,?,?)', (date, json.dumps(weights),json.dumps(voters),json.dumps(users)))
+
+    def _get_foodplace(self, name):
+        c = self._conn.cursor()
+        return c.execute('SELECT * FROM foodplace WHERE name = ?', (name,)).fetchone()
+
+    def get_winner(self):
+        if self.results:
+            return self._get_foodplace(self.results[0][0][0])
+        return None
         
     def calc_results(self):
         foods = self.get_foodplaces()
